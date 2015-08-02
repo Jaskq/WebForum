@@ -1,0 +1,23 @@
+.headbar {
+  float: right;
+}
+
+.dropdown-menu {
+    min-width: 0px !important;
+}
+
+h1, h3 {
+  color : #0E4C92;
+}
+
+.invalidUser {
+  color: #d9534f;
+}
+
+.validUser {
+  color: #5cb85c;
+}
+
+.edit, .reply {
+  color: #666666;
+}
