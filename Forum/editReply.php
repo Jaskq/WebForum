@@ -7,11 +7,11 @@ require_once 'generator.php';
 
 $comment = "'".$_POST['comment']."'";
 $mode = $_POST['mode'];
-$id = $_POST['id'];
 
 $db = new dbAccess($host, $user, $password, $database);
 
 if($mode == "edit"){
+  $id = $_POST['id'];
   $fields = ["comment"];
   $values = [$comment];
   $where = "id = $id";
@@ -19,6 +19,18 @@ if($mode == "edit"){
 
   if($result){
       echo "Success";
+  }
+} elseif($mode == "reply"){
+  $title = "'".$_POST['title']."'";
+  $poster = "'".$_SESSION['username']."'";
+
+  $fields = ["poster", "title", "comment", "commentid"];
+  $values = [$poster, $title, $comment, 1];
+
+  $result = $db->insertDB('threads', $values, $fields);
+
+  if($result){
+   echo "Success";
   }
 }
 ?>

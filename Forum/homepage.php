@@ -9,7 +9,7 @@
   $body = "";
 
   $where = "commentid = 0";
-  $threads = new Thread($where);
+  $threads = new Thread($where, "desc");
   $username = "";
 
   if(isset($_SESSION['username'])){

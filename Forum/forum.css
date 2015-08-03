@@ -21,3 +21,12 @@ h1, h3 {
 .edit, .reply {
   color: #666666;
 }
+
+.repliableComment {
+    border: 1px solid gray;
+    margin-bottom: 25px;
+    padding: 5px;
+    width: 100%;
+    height: 150px;
+    overflow: scroll;
+}

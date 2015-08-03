@@ -13,7 +13,7 @@
     private $database;
     private $ids;
 
-    function __construct($where){
+    function __construct($where, $order=""){
 
       $this->titles = array();
       $this->posters = array();
@@ -24,7 +24,7 @@
       $this->password = '';
       $this->database = 'forumDB';
 
-      $order = "'id'";
+      $order = "id $order";
       $db = new DbAccess($this->host, $this->user, $this->password, $this->database);
       $result = $db->selectDB("threads", $where, '', $order);
       if($result){
@@ -53,38 +53,45 @@ PAGE;
           </h6>
 PAGE;
       }
+      return $output;
+    }
+
+    function addModals(){
+      $output = "";
       $output .=<<<PAGE
-        <div class="modal fade" id="replyModal">
+
+      <div class="modal fade" id="replyModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Reply</h4>
+            </div>
+            <div class="modal-body">
+              <div class="repliableComment"></div>
+              <textarea id="repliable" rows="8" cols="78"></textarea>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" id="commentSave">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <div class="modal fade" id="editModal">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Edit your comment</h4>
               </div>
-                <div class="modal-body">
-                  <textarea id="editable" rows="8" cols="78"></textarea>
-                </div>
+              <div class="modal-body">
+                <textarea id="editable" rows="8" cols="78"></textarea>
+              </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="commentSave">Save changes</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal fade" id="replyModal">
-          <div class="modal-dialog">
-            <div class="model-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Reply</h4>
-              </div>
-              <div class="modal-body">
-                <div class="repliableComment"></div>
-                <textarea class="repliable" rows="8" cols="78"></textarea>
-              </div>
-              <div class ="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="commentSave">Save changes</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="commentUpdate">Save changes</button>
               </div>
             </div>
           </div>
@@ -93,7 +100,7 @@ PAGE;
       return $output;
     }
 
-    function displayThread($username=""){
+    function displayThread($username="", $showModifiers=false){
       $output = "";
       $size = count($this->titles);
       for($i = 0; $i < $size; $i++){
@@ -112,12 +119,17 @@ PAGE;
             <p class="hidden" hidden>$id</p>
           <h5 class="username">by : $poster</h5>
 PAGE;
-        $output .= $this->commentModifiers($username, $poster);
+        if($showModifiers == true){
+          $output .= $this->commentModifiers($username, $poster);
+        }
         $output .= <<<PAGE
           </div>
           <hr>
           </div>
 PAGE;
+      }
+      if($showModifiers == true){
+        $output .= $this->addModals();
       }
       return $output;
     }

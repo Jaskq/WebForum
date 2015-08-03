@@ -42,6 +42,7 @@
               $(document).ready(function(){
                 var comment = "";
                 var commentId = "";
+                var title = "";
 
                 $('span#edit').on("click", function(){
                   comment = $(this).parent().parent().children(".comment");
@@ -49,21 +50,53 @@
                   commentId = commentId.text().trim();
                   var commentText = comment.text().trim();
 
-                  $('#replyModal').on('show.bs.modal', function (event) {
-                    var modal = $(this);
-                     $('#replyModal .modal-dialog .modal-content .modal-body #editable').text(commentText);
+                  $('#editModal').on('show.bs.modal', function (event) {
+                    $('#editModal .modal-dialog .modal-content .modal-body #editable').text(commentText);
                   });
-                  $('#replyModal').modal();
+                  $('#editModal').modal();
+                });
+
+                $('span#reply').on("click", function(){
+                  comment = $(this).parent().parent().children(".comment");
+                  commentId = $(this).parent().parent().children(".hidden");
+                  title = $(this).parent().parent().parent().children("h3");
+                  var commentText = comment.text().trim();
+
+                  $('#replyModal').on('show.bs.modal', function (event){
+                    $('#replyModal .modal-dialog .modal-content .modal-body .repliableComment').text(commentText);
+                  });
+                    $('#replyModal').modal();
                 });
 
                 $('#replyModal .modal-dialog .modal-content .modal-footer #commentSave').on('click', function(){
-                  var text = $('#replyModal .modal-dialog .modal-content .modal-body #editable').val();
-                  comment.text(text);
+                  var text = $('#replyModal .modal-dialog .modal-content .modal-body #repliable').val();
+                  var parameters = "mode=reply&comment="+text+"&title="+title.text();
 
+                  alert("hello");
                   var http=new XMLHttpRequest();
                   var url = "editReply.php";
-                  var parameters = "mode=edit&comment="+text+"&id="+commentId;
+                  http.open("POST", url, false);
+                  http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                  http.setRequestHeader("Content-length", parameters.length);
+                  http.setRequestHeader("Connection", "close");
 
+                  http.onreadystatechange = function() {
+                    if(http.readyState == 4 && http.status == 200) {
+                      alert(http.responseText);
+                    }
+                  }
+                  http.send(parameters);
+                });
+
+
+                $('#editModal .modal-dialog .modal-content .modal-footer #commentUpdate').on('click', function(){
+                  var text = $('#editModal .modal-dialog .modal-content .modal-body #editable').val();
+                  var parameters = "mode=edit&comment="+text+"&id="+commentId;
+                  comment.text(text);
+
+                  alert("title");
+                  var http=new XMLHttpRequest();
+                  var url = "editReply.php";
                   http.open("POST", url, false);
                   http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                   http.setRequestHeader("Content-length", parameters.length);
@@ -76,9 +109,6 @@
                   http.send(parameters);
                 });
               });
-
-
-
             </script>
           </body>
       </html>
