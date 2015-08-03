@@ -41,34 +41,36 @@
 
               $(document).ready(function(){
                 var comment = "";
+                var commentId = "";
 
                 $('span#edit').on("click", function(){
-                  comment = $(this).parent().parent().children("p");
+                  comment = $(this).parent().parent().children(".comment");
+                  commentId = $(this).parent().parent().children(".hidden");
+                  commentId = commentId.text().trim();
                   var commentText = comment.text().trim();
-                  $('#modal').on('show.bs.modal', function (event) {
+
+                  $('#replyModal').on('show.bs.modal', function (event) {
                     var modal = $(this);
-                     $('#modal .modal-dialog .modal-content .modal-body #editable').text(commentText);
+                     $('#replyModal .modal-dialog .modal-content .modal-body #editable').text(commentText);
                   });
-                  $('#modal').modal();
+                  $('#replyModal').modal();
                 });
 
-                $('#modal .modal-dialog .modal-content .modal-footer #commentSave').on('click', function(){
-                  var text = $('#modal .modal-dialog .modal-content .modal-body #editable').val();
+                $('#replyModal .modal-dialog .modal-content .modal-footer #commentSave').on('click', function(){
+                  var text = $('#replyModal .modal-dialog .modal-content .modal-body #editable').val();
                   comment.text(text);
 
                   var http=new XMLHttpRequest();
                   var url = "editReply.php";
-                  var parameters = "mode=edit&comment="+text;
+                  var parameters = "mode=edit&comment="+text+"&id="+commentId;
 
                   http.open("POST", url, false);
                   http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                   http.setRequestHeader("Content-length", parameters.length);
                   http.setRequestHeader("Connection", "close");
-
-                  alert("Something");
                   http.onreadystatechange = function() {
 	                  if(http.readyState == 4 && http.status == 200) {
-		                  alert(http.responseText);
+		                  //alert(http.responseText);
 	                  }
                   }
                   http.send(parameters);

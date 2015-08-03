@@ -1,11 +1,24 @@
 <?php
 
-echo $_POST['comment'];
+require_once 'dblogin.php';
+require_once 'dbaccess.php';
+require_once 'headbar.php';
+require_once 'generator.php';
 
+$comment = "'".$_POST['comment']."'";
+$mode = $_POST['mode'];
+$id = $_POST['id'];
 
+$db = new dbAccess($host, $user, $password, $database);
 
+if($mode == "edit"){
+  $fields = ["comment"];
+  $values = [$comment];
+  $where = "id = $id";
+  $result = $db->updateDB('threads', $values, $fields, $where);
 
-
-
-
+  if($result){
+      echo "Success";
+  }
+}
 ?>

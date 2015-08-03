@@ -39,6 +39,19 @@ class DbAccess {
       return $this->queryDB($query);
     }
 
+    public function updateDB($table, $values, $fields = "", $where){
+      $size = count($fields);
+      $query = sprintf("update %s set ", $table);
+      for($i = 0; $i < $size; $i++){
+        $query .= sprintf("%s = %s", $fields[$i], $values[$i]);
+        if($i < $size-1){
+          $query .=",";
+        }
+      }
+      $query .= sprintf("where %s;", $where);
+      return $this->queryDB($query);
+    }
+
     private function connectDB(){
       $db_connection = new mysqli($this->host, $this->user, $this->password, $this->database);
       if ($db_connection->connect_error) {
