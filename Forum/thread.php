@@ -45,6 +45,7 @@
       if($username == $poster){
         $output .= <<<PAGE
           <span id="edit"><u>edit</u></span>
+          <span id="delete"><u>delete</u></span>
 PAGE;
       }
       if($username != ""){
@@ -100,7 +101,7 @@ PAGE;
       return $output;
     }
 
-    function displayThread($username="", $showModifiers=false){
+    function displayNewTopics($username="", $showModifiers=false){
       $output = "";
       $size = count($this->titles);
       for($i = 0; $i < $size; $i++){
@@ -125,6 +126,39 @@ PAGE;
         $output .= <<<PAGE
           </div>
           <hr>
+          </div>
+PAGE;
+      }
+      if($showModifiers == true){
+        $output .= $this->addModals();
+      }
+      return $output;
+    }
+
+    function displayFullThread($username="", $showModifiers){
+      $output = "";
+      $size = count($this->titles);
+      for($i = 0; $i < $size; $i++){
+        $title = $this->titles[$i];
+        $comment = $this->comments[$i];
+        $poster = $this->posters[$i];
+        $id = $this->ids[$i];
+
+        $output .= <<<PAGE
+          <div class="row">
+            <p class="hidden" hidden>$id</p>
+            <h5 class="username"> by : $poster</h5>
+            <div>
+              <p class="comment">
+                $comment
+              </p>
+PAGE;
+        if($showModifiers == true){
+          $output .= $this->commentModifiers($username, $poster);
+        }
+          $output .= <<<PAGE
+            </div>
+            <hr>
           </div>
 PAGE;
       }

@@ -52,6 +52,11 @@ class DbAccess {
       return $this->queryDB($query);
     }
 
+    public function deleteDB($table, $where){
+      $query = sprintf("delete from %s where %s;", $table, $where);
+      return $this->queryDB($query);
+    }
+
     private function connectDB(){
       $db_connection = new mysqli($this->host, $this->user, $this->password, $this->database);
       if ($db_connection->connect_error) {

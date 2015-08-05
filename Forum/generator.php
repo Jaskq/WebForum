@@ -46,7 +46,7 @@
 
                 $('span#edit').on("click", function(){
                   comment = $(this).parent().parent().children(".comment");
-                  commentId = $(this).parent().parent().children(".hidden");
+                  commentId = $(this).parent().parent().parent().children(".hidden");
                   commentId = commentId.text().trim();
                   var commentText = comment.text().trim();
 
@@ -56,12 +56,35 @@
                   $('#editModal').modal();
                 });
 
+                $('span#delete').on("click", function(){
+                  commentId = $(this).parent().parent().parent().children(".hidden").text();
+
+                  var http=new XMLHttpRequest();
+                  var url = "editReply.php";
+                  var parameters = "mode=delete&id="+commentId;
+
+                  http.open("POST", url, false);
+                  http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                  http.setRequestHeader("Content-length", parameters.length);
+                  http.setRequestHeader("Connection", "close");
+
+                  http.onreadystatechange = function() {
+                    if(http.readyState == 4 && http.status == 200) {
+                      if(http.responseText == "Success"){
+                        location.reload();
+                      }
+                    }
+                  }
+                  http.send(parameters);
+
+                });
+
                 $('span#reply').on("click", function(){
                   comment = $(this).parent().parent().children(".comment");
-                  commentId = $(this).parent().parent().children(".hidden");
-                  title = $(this).parent().parent().parent().children("h3");
+                  commentId = $(this).parent().parent().parent().children(".hidden").text();
+                  title = $('h1');
                   var commentText = comment.text().trim();
-
+                      alert(commentId);
                   $('#replyModal').on('show.bs.modal', function (event){
                     $('#replyModal .modal-dialog .modal-content .modal-body .repliableComment').text(commentText);
                   });
@@ -72,7 +95,6 @@
                   var text = $('#replyModal .modal-dialog .modal-content .modal-body #repliable').val();
                   var parameters = "mode=reply&comment="+text+"&title="+title.text();
 
-                  alert("hello");
                   var http=new XMLHttpRequest();
                   var url = "editReply.php";
                   http.open("POST", url, false);
@@ -82,7 +104,9 @@
 
                   http.onreadystatechange = function() {
                     if(http.readyState == 4 && http.status == 200) {
-                      alert(http.responseText);
+                      if(http.responseText == "Success"){
+                        location.reload();
+                      }
                     }
                   }
                   http.send(parameters);

@@ -16,7 +16,7 @@
     $username = $_SESSION['username'];
   }
 
-  $body = $threads->displayThread($username);
+  $body = $threads->displayNewTopics($username);
 
   $page = generatePage($body);
   echo $page;

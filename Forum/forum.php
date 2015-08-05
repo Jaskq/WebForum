@@ -14,9 +14,9 @@ $threads = new Thread($where);
 if(isset($_SESSION['username'])){
   $username = $_SESSION['username'];
 }
-$body = $threads->displayThread($username, true);
+$body = $threads->displayFullThread($username, true);
 
-$page = generatePage($body);
+$page = generatePage($body, $title);
 echo $page;
 
 ?>
